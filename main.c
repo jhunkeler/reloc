@@ -9,7 +9,7 @@ RelocMatch *reloc_match(char *haystack, const char *needle) {
     // Search the needle in the data
     if (!(memcmp(data, needle, needle_size))) {
         if (!(match = calloc(1, sizeof(RelocMatch)))) {
-            fprintf(stderr,"Failed to allocate FindStat structure: %s\n", strerror(errno));
+            fprintf(stderr,"Failed to allocate RelocMatch structure: %s\n", strerror(errno));
             exit(1);
         }
         size_t data_end = strlen(data);
@@ -28,6 +28,7 @@ RelocData *reloc_read(const char *filename) {
     char *data = NULL;
     FILE *fp = NULL;
     size_t size = 0;
+    RelocData *result;
 
     // Open file for reading in binary mode
     if (!(fp = fopen(filename, "rb"))) {
@@ -41,13 +42,16 @@ RelocData *reloc_read(const char *filename) {
     rewind(fp);
 
     if (!(data = calloc(sizeof(char), size + 1))) {
-        fprintf(stderr, "Cannot allocate data array: %s\n", strerror(errno));
+        fprintf(stderr, "Failed to allocate data array: %s\n", strerror(errno));
         exit(1);
     }
 
     // Read data into array
     fread(data, sizeof(char), size, fp);
-    RelocData *result = (RelocData *) malloc(sizeof(RelocData));
+    if (!(result = (RelocData *)malloc(sizeof(RelocData)))) {
+        fprintf(stderr, "Failed to allocate RelocData structure: %s\n", strerror(errno));
+        exit(1);
+    }
     result->size = size;
     result->data = data;
     result->path = strdup(filename);
@@ -82,7 +86,7 @@ void reloc_deinit_data(RelocData *finfo) {
 void reloc_replace(RelocMatch *match, const char *rstr) {
     size_t rstr_length = strlen(rstr);
     if (rstr_length > match->length) {
-        fprintf(stderr, "Replacement value is too long (%lu > %lu)\n", match->length, rstr_length);
+        fprintf(stderr, "Replacement string is too long ("SIZE_T_FMT " > " SIZE_T_FMT ")\n", rstr_length, match->length);
         return;
     }
     char *data = match->begin;
@@ -147,7 +151,7 @@ int main(int argc, char *argv[]) {
     }
 
     reloc_write(info, output_file);
-    printf("%lu\n", records);
+    printf(SIZE_T_FMT"\n", records);
 
     reloc_deinit_data(info);
     return 0;

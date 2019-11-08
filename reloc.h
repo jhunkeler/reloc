@@ -14,8 +14,10 @@
 
 #if defined(_WIN32) || defined(_WIN64)
 #define DIRSEP '\\'
+#define SIZE_T_FMT "%I64u"
 #elif defined(__linux__) || defined(__unix__) || defined(__APPLE__) || defined(__MACH__)
 #define DIRSEP '/'
+#define SIZE_T_FMT "%lu"
 #endif
 
 
