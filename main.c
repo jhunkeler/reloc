@@ -131,8 +131,8 @@ int main(int argc, char *argv[]) {
                "\n", program, program);
         exit(1);
     }
-    char *needle = argv[1];
-    char *replacement = argv[2];
+    char *needle = strdup(argv[1]);
+    char *replacement = strdup(argv[2]);
     char *input_file = strdup(argv[3]);
     char *output_file = strdup(argv[4]);
     RelocData *info = reloc_read(input_file);
@@ -153,6 +153,10 @@ int main(int argc, char *argv[]) {
     reloc_write(info, output_file);
     printf(SIZE_T_FMT"\n", records);
 
+    free(needle);
+    free(replacement);
+    free(input_file);
+    free(output_file);
     reloc_deinit_data(info);
     return 0;
 }
