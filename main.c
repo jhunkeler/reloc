@@ -150,7 +150,10 @@ int main(int argc, char *argv[]) {
         records++;
     }
 
+    // Write output file to disk
     reloc_write(info, output_file);
+
+    // Report number of strings processed
     printf(SIZE_T_FMT"\n", records);
 
     free(needle);
