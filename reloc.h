@@ -1,13 +1,10 @@
-//
-// Created by jhunk on 11/7/2019.
-//
-
 #ifndef RELOC_RELOC_H
 #define RELOC_RELOC_H
 
 #define _GNU_SOURCE 1
 
 #include <ctype.h>
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
