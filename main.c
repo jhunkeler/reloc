@@ -116,7 +116,12 @@ void reloc_replace(RelocMatch *match, const char *rstr) {
 
 
 int main(int argc, char *argv[]) {
-    const char *program = strrchr(argv[0], DIRSEP) + 1;
+    char *program = argv[0];
+    char *program_relative = strrchr(program, DIRSEP);
+    if (program_relative) {
+        program = program_relative + 1;
+    }
+
     if (argc < 5) {
         printf("%s <str1> <str2> <input_file> <output_file>\n"
                "\n"
