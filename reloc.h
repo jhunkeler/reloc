@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "version.h"
 
 #if defined(_WIN32) || defined(_WIN64)
 #define DIRSEP '\\'

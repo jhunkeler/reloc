@@ -115,6 +115,11 @@ void reloc_replace(RelocMatch *match, const char *rstr) {
 }
 
 
+void show_version() {
+    printf("%s\n", VERSION);
+}
+
+
 int main(int argc, char *argv[]) {
     char *program = argv[0];
     char *program_relative = strrchr(program, DIRSEP);
@@ -122,20 +127,29 @@ int main(int argc, char *argv[]) {
         program = program_relative + 1;
     }
 
+    for (int i = 0; i < argc; i++) {
+        if (!strcmp(argv[i], "--version") || !strcmp(argv[i], "-V")) {
+            show_version();
+            exit(0);
+        }
+    }
+
     if (argc < 5) {
-        printf("%s <str1> <str2> <input_file> <output_file>\n"
+        printf("%s [-V] <str1> <str2> <input_file> <output_file>\n"
                "\n"
                "Arguments:\n"
-               "str1 - Pattern to search for\n"
-               "str2 - Replace str1 with contents of str2\n"
-               "input_file - Path to input file\n"
-               "output_file - Path to output file\n"
+               "--version (-V) - Display version and exit\n"
+               "str1           - Pattern to search for\n"
+               "str2           - Replace str1 with contents of str2\n"
+               "input_file     - Path to input file\n"
+               "output_file    - Path to output file\n"
                "\n"
                "Example:\n"
                "%s /original/path /new/path input.bin output.bin\n"
                "\n", program, program);
         exit(1);
     }
+
     char *needle = strdup(argv[1]);
     char *replacement = strdup(argv[2]);
     char *input_file = strdup(argv[3]);
