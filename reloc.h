@@ -37,7 +37,6 @@ typedef struct {
 
 
 RelocMatch *reloc_match(char *haystack, const char *needle);
-char *reloc_find_null(char *s);
 RelocData *reloc_read(const char *filename);
 size_t reloc_write(RelocData *finfo, const char *filename);
 void reloc_deinit_data(RelocData *finfo);
