@@ -1,6 +1,5 @@
 #include "reloc.h"
 
-
 RelocMatch *reloc_match(char *haystack, const char *needle) {
     char *data = haystack;
     size_t needle_size = strlen(needle);
@@ -9,8 +8,8 @@ RelocMatch *reloc_match(char *haystack, const char *needle) {
     // Search the needle in the data
     if (!(memcmp(data, needle, needle_size))) {
         if (!(match = calloc(1, sizeof(RelocMatch)))) {
-            fprintf(stderr,"Failed to allocate RelocMatch structure: %s\n", strerror(errno));
-            exit(1);
+            reloc_error = RELOC_ENOMEM;
+            return NULL;
         }
         size_t data_end = strlen(data);
         match->begin = data;
@@ -20,6 +19,8 @@ RelocMatch *reloc_match(char *haystack, const char *needle) {
         match->post_length = strlen(match->post);
         match->total_length = data_end;
     }
+
+    reloc_error = RELOC_ESUCCESS;
     return match;
 }
 
@@ -32,8 +33,8 @@ RelocData *reloc_read(const char *filename) {
 
     // Open file for reading in binary mode
     if (!(fp = fopen(filename, "rb"))) {
-        fprintf(stderr, "Cannot open %s: %s\n", filename, strerror(errno));
-        exit(1);
+        reloc_error = RELOC_EREAD;
+        return NULL;
     }
 
     // Determine file size
@@ -42,34 +43,42 @@ RelocData *reloc_read(const char *filename) {
     rewind(fp);
 
     if (!(data = calloc(sizeof(char), size + 1))) {
-        fprintf(stderr, "Failed to allocate data array: %s\n", strerror(errno));
-        exit(1);
+        reloc_error = RELOC_ENOMEM;
+        return NULL;
     }
 
     // Read data into array
     fread(data, sizeof(char), size, fp);
     if (!(result = (RelocData *)malloc(sizeof(RelocData)))) {
-        fprintf(stderr, "Failed to allocate RelocData structure: %s\n", strerror(errno));
-        exit(1);
+        reloc_error = RELOC_ENOMEM;
+        return NULL;
     }
+    fclose(fp);
+
     result->size = size;
     result->data = data;
     result->path = strdup(filename);
+    reloc_error = RELOC_ESUCCESS;
     return result;
 }
 
 
 size_t reloc_write(RelocData *finfo, const char *filename) {
+    size_t bytes = 0;
     FILE *fp;
 
     // Open file for writing in binary mode
     if (!(fp = fopen(filename, "w+b"))) {
-        fprintf(stderr,"Cannot open %s for writing: %s\n", filename, strerror(errno));
-        exit(1);
+        reloc_error = RELOC_EWRITE;
+        return 0;
     }
 
     // Write data
-    return fwrite(finfo->data, sizeof(char), finfo->size, fp);
+    bytes = fwrite(finfo->data, sizeof(char), finfo->size, fp);
+    fclose(fp);
+
+    reloc_error = RELOC_ESUCCESS;
+    return bytes;
 }
 
 
@@ -85,10 +94,6 @@ void reloc_deinit_data(RelocData *finfo) {
 
 void reloc_replace(RelocMatch *match, const char *rstr) {
     size_t rstr_length = strlen(rstr);
-    if (rstr_length > match->length) {
-        fprintf(stderr, "Replacement string is too long ("SIZE_T_FMT " > " SIZE_T_FMT ")\n", rstr_length, match->length);
-        return;
-    }
     char *data = match->begin;
     size_t i = 0;
 
@@ -111,5 +116,5 @@ void reloc_replace(RelocMatch *match, const char *rstr) {
     }
 
     // Destroy bytes between the end of the original data and the end of the replaced string
-    memset(data, '\0', post - data);
+    memset(data, NULLBYTE, post - data);
 }

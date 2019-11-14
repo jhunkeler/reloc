@@ -43,12 +43,27 @@ int main(int argc, char *argv[]) {
     char *input_file = strdup(argv[3]);
     char *output_file = strdup(argv[4]);
     RelocData *info = reloc_read(input_file);
+    if (!info) {
+        reloc_perror(input_file);
+        exit(reloc_error);
+    }
     size_t records = 0;
+    size_t replacement_length = strlen(replacement);
 
     for (size_t i = 0; i < info->size; i++) {
         RelocMatch *match = NULL;
         if (!(match = reloc_match(&info->data[i], needle))) {
+            if (reloc_error) {
+                reloc_perror("reloc_match: ");
+                exit(reloc_error);
+            }
             // No match found
+            continue;
+        }
+
+        if (replacement_length > match->length) {
+            fprintf(stderr, "Replacement string is too long ("SIZE_T_FMT " > " SIZE_T_FMT ")\n", replacement_length, match->length);
+            free(match);
             continue;
         }
         // Replace string
@@ -59,6 +74,10 @@ int main(int argc, char *argv[]) {
 
     // Write output file to disk
     reloc_write(info, output_file);
+    if (reloc_error) {
+        perror(output_file);
+        exit(reloc_error);
+    }
 
     // Report number of strings processed
     printf(SIZE_T_FMT"\n", records);
