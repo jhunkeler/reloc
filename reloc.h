@@ -18,6 +18,18 @@
 #define SIZE_T_FMT "%lu"
 #endif
 
+#define NULLBYTE '\0'
+
+extern int reloc_error;
+
+enum {
+    RELOC_ESUCCESS=0,
+    RELOC_EREAD,
+    RELOC_EWRITE,
+    RELOC_EVERIFY,
+    RELOC_ELENGTH,
+    RELOC_ENOMEM,
+};
 
 typedef struct {
     size_t size;
@@ -35,6 +47,8 @@ typedef struct {
     size_t total_length;
 } RelocMatch;
 
+const char *reloc_strerror(int code);
+void reloc_perror(const char *msg);
 
 RelocMatch *reloc_match(char *haystack, const char *needle);
 RelocData *reloc_read(const char *filename);
