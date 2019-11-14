@@ -12,7 +12,7 @@ configure_file(version.h.in version.h)
 include_directories("${CMAKE_BINARY_DIR}")
 
 add_library(relocate
-	    STATIC reloc.c)
+	    STATIC reloc.c reloc_error.c)
 
 add_executable(reloc main.c)
 
