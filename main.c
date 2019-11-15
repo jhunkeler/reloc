@@ -42,13 +42,14 @@ int main(int argc, char *argv[]) {
     char *replacement = strdup(argv[2]);
     char *input_file = strdup(argv[3]);
     char *output_file = strdup(argv[4]);
-    RelocData *info = reloc_read(input_file);
-    if (!info) {
+    size_t records = 0;
+    size_t replacement_length = strlen(replacement);
+    RelocData *info = NULL;
+
+    if (!(info = reloc_read(input_file))) {
         reloc_perror(input_file);
         exit(reloc_error);
     }
-    size_t records = 0;
-    size_t replacement_length = strlen(replacement);
 
     for (size_t i = 0; i < info->size; i++) {
         RelocMatch *match = NULL;

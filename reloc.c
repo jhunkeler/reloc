@@ -2,18 +2,20 @@
 
 RelocMatch *reloc_match(char *haystack, const char *needle) {
     char *data = haystack;
-    size_t needle_size = strlen(needle);
+    char *pattern = strdup(needle);
+    size_t pattern_size = strlen(pattern);
     RelocMatch *match = NULL;
 
     // Search the needle in the data
-    if (!(memcmp(data, needle, needle_size))) {
-        if (!(match = calloc(1, sizeof(RelocMatch)))) {
+    if (!(memcmp(data, pattern, pattern_size))) {
+        if (!(match = (RelocMatch *)calloc(1, sizeof(RelocMatch)))) {
             reloc_error = RELOC_ENOMEM;
+            free(pattern);
             return NULL;
         }
         size_t data_end = strlen(data);
         match->begin = data;
-        match->end = match->begin + needle_size;
+        match->end = match->begin + pattern_size;
         match->length = match->end - match->begin;
         match->post = match->end;
         match->post_length = strlen(match->post);
@@ -21,6 +23,7 @@ RelocMatch *reloc_match(char *haystack, const char *needle) {
     }
 
     reloc_error = RELOC_ESUCCESS;
+    free(pattern);
     return match;
 }
 
@@ -42,14 +45,14 @@ RelocData *reloc_read(const char *filename) {
     size = ftell(fp);
     rewind(fp);
 
-    if (!(data = calloc(sizeof(char), size + 1))) {
+    if (!(data = (char *)calloc(size + 1, sizeof(char)))) {
         reloc_error = RELOC_ENOMEM;
         return NULL;
     }
 
     // Read data into array
     fread(data, sizeof(char), size, fp);
-    if (!(result = (RelocData *)malloc(sizeof(RelocData)))) {
+    if (!(result = (RelocData *)calloc(1, sizeof(RelocData)))) {
         reloc_error = RELOC_ENOMEM;
         return NULL;
     }
@@ -86,6 +89,9 @@ void reloc_deinit_data(RelocData *finfo) {
     if (finfo) {
         if (finfo->path) {
             free(finfo->path);
+        }
+        if (finfo->data) {
+            free(finfo->data);
         }
         free(finfo);
     }
