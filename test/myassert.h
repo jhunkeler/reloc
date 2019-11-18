@@ -8,4 +8,4 @@
                     message); \
             return 1; \
         } \
-    } while (0);
+    } while (0)
