@@ -7,7 +7,7 @@ RelocMatch *reloc_match(char *haystack, const char *needle) {
     RelocMatch *match = NULL;
 
     // Search the needle in the data
-    if (!(memcmp(data, pattern, pattern_size))) {
+    if (!memcmp(data, pattern, pattern_size)) {
         if (!(match = (RelocMatch *)calloc(1, sizeof(RelocMatch)))) {
             reloc_error = RELOC_ENOMEM;
             free(pattern);
@@ -42,7 +42,7 @@ RelocData *reloc_read(const char *filename) {
 
     // Determine file size
     fseek(fp, 0, SEEK_END);
-    size = ftell(fp);
+    size = (size_t)ftell(fp);
     rewind(fp);
 
     if (!(data = (char *)calloc(size + 1, sizeof(char)))) {
