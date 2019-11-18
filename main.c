@@ -5,6 +5,23 @@ void show_version() {
     printf("%s\n", VERSION);
 }
 
+void usage(char *program) {
+    printf("usage: %s [-V] <str1> <str2> <input_file> <output_file>\n"
+           "\n"
+           "Options:\n"
+           "--help    (-h) - Display this help message\n"
+           "--version (-V) - Display version and exit\n"
+           "\n"
+           "Positional arguments:\n"
+           "str1           - Search string\n"
+           "str2           - Replacement string\n"
+           "input_file     - Input file name\n"
+           "output_file    - Output file name\n"
+           "\n"
+           "Example:\n"
+           "%s /original/string /new/string input.bin output.bin\n"
+           "\n", program, program);
+}
 
 int main(int argc, char *argv[]) {
     char *program = argv[0];
@@ -14,6 +31,10 @@ int main(int argc, char *argv[]) {
     }
 
     for (int i = 0; i < argc; i++) {
+        if (!strcmp(argv[i], "--help") || !strcmp(argv[i], "-h")) {
+            usage(program);
+            exit(0);
+        }
         if (!strcmp(argv[i], "--version") || !strcmp(argv[i], "-V")) {
             show_version();
             exit(0);
@@ -21,20 +42,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (argc < 5) {
-        printf("usage: %s [-V] <str1> <str2> <input_file> <output_file>\n"
-               "\n"
-               "Options:\n"
-               "--version (-V) - Display version and exit\n"
-               "\n"
-               "Positional arguments:\n"
-               "str1           - Search string\n"
-               "str2           - Replacement string\n"
-               "input_file     - Input file name\n"
-               "output_file    - Output file name\n"
-               "\n"
-               "Example:\n"
-               "%s /original/string /new/string input.bin output.bin\n"
-               "\n", program, program);
+        usage(program);
         exit(1);
     }
 
@@ -56,6 +64,7 @@ int main(int argc, char *argv[]) {
         if (!(match = reloc_match(&info->data[i], needle))) {
             if (reloc_error) {
                 reloc_perror("reloc_match: ");
+                reloc_deinit_data(info);
                 exit(reloc_error);
             }
             // No match found
