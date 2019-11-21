@@ -1,0 +1,38 @@
+name: ci
+
+#on: [push, pull_request]
+on: [push]
+
+jobs:
+  unix:
+    name: "${{ matrix.os }}"
+    runs-on: "${{ matrix.os }}"
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macOS-latest]
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: configure
+      run: cmake .
+    - name: make
+      run: make
+    - name: test
+      run: ctest -V
+    - name: install
+      run: sudo make install
+
+  windows:
+    name: "${{ matrix.os }}"
+    runs-on: "${{ matrix.os }}"
+    strategy:
+      matrix:
+        os: [windows-latest]
+    steps:
+      - uses: actions/checkout@v1
+      - name: configure
+        run: cmake .
+      - name: make
+        run: cmake --build .
+      - name: test
+        run: ctest -V

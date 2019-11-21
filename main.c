@@ -6,7 +6,7 @@ void show_version() {
 }
 
 void usage(char *program) {
-    printf("usage: %s [-V] <str1> <str2> <input_file> <output_file>\n"
+    printf("usage: %s [-hV] <str1> <str2> <input_file> <output_file>\n"
            "\n"
            "Options:\n"
            "--help    (-h) - Display this help message\n"

@@ -2,19 +2,36 @@
 
 Replace strings in binary executables and data files.
 
+![](https://github.com/jhunkeler/reloc/workflows/ci/badge.svg)
+
 ## System Requirements
 
 * `gcc`
+* _or_ `clang`
+* _or_ Microsoft Visual Studio (`cl.exe`)p
 * `>=cmake-2.18.11`
 
 ## Installing
+
+### Linux / MacOS
 
 ```bash
 $ git clone https://github.com/jhunkeler/reloc
 $ mkdir build
 $ cd build
-$ cmake -DCMAKE_INSTALL_PREFIX=/some/place ..
+$ cmake -DCMAKE_INSTALL_PREFIX=/some/place -DCMAKE_BUILD_TYPE=Release ..
 $ make install
+```
+
+### Windows
+
+```cmd
+> git clone https://github.com/jhunkeler/reloc
+> cd reloc
+> mkdir build
+> cd build
+> cmake -DCMAKE_INSTALL_PREFIX=c:\some\place -DCMAKE_BUILD_TYPE=Release ..
+> cmake --build . --target INSTALL
 ```
 
 ## Usage
