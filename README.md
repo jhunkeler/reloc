@@ -8,7 +8,7 @@ Replace strings in binary executables and data files.
 
 * `gcc`
 * _or_ `clang`
-* _or_ Microsoft Visual Studio (`cl.exe`)p
+* _or_ Microsoft Visual Studio (`cl.exe`)
 * `>=cmake-2.18.11`
 
 ## Installing
