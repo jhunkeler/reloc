@@ -19,7 +19,7 @@ int test_reloc_read() {
     myassert("info->size is incorrect", info->size == sizeof(test_case));
     myassert("info->path is incorrect", !strcmp(info->path, input_file));
     myassert("info->data is uninitialized", info->data);
-    free(info);
+    reloc_deinit_data(info);
     return 0;
 }
 
@@ -27,7 +27,7 @@ int test_reloc_read_verify() {
     RelocData *info = reloc_read(input_file);
     myassert("failed to populate RelocData struct", info);
     myassert("info->data != input_data contents", !memcmp(test_case, info->data, info->size));
-    free(info);
+    reloc_deinit_data(info);
     return 0;
 }
 
