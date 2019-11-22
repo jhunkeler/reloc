@@ -27,6 +27,7 @@ endfunction()
 
 add_reloc_test(test_reloc_match test_reloc_match.c)
 add_reloc_test(test_reloc_read test_reloc_read.c)
+add_reloc_test(test_reloc_write test_reloc_write.c)
 add_exec_test(test_exec_success reloc "${INPUT_SEARCH}" "${INPUT_REPLACE}" "${INPUT_FN}" "${OUTPUT_FN}")
 
 # Windows users need grep too. "findstr" and "find" were not reliable here
