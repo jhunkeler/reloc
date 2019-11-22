@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest]
-    
+
     steps:
     - uses: actions/checkout@v1
     - name: configure
@@ -23,15 +23,20 @@ jobs:
       run: sudo make install
 
   windows:
-    name: "${{ matrix.os }}"
+    name: "${{ matrix.os }}: ${{ matrix.target }}"
     runs-on: "${{ matrix.os }}"
     strategy:
       matrix:
         os: [windows-latest]
+        target: ["Visual Studio 16 2019", "MSYS Makefiles"]
+    env:
+      MTARGET: "${{ matrix.target }}"
+
     steps:
       - uses: actions/checkout@v1
       - name: configure
-        run: cmake .
+        run: cmake -G "${env:MTARGET}" .
+        shell: pwsh
       - name: make
         run: cmake --build .
       - name: test
