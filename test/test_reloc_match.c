@@ -72,11 +72,11 @@ int test_reloc_match() {
         myassert("Invalid match->end", match->end != NULL);
         printf("\tpost=\"%s\", data=\"%s\"\n", match->post, match->begin);
         myassert("Invalid match->post", !strcmp(match->post, test_solution_post[i]));
-        printf("\tlength=%lu\n", match->length);
+        printf("\tlength=" SIZE_T_FMT "\n", match->length);
         myassert("Invalid match->length", match->length == test_solution_length[i]);
-        printf("\tpost_length=%lu\n", match->post_length);
+        printf("\tpost_length=" SIZE_T_FMT "\n", match->post_length);
         myassert("Invalid match->post_length", match->post_length == test_solution_post_length[i]);
-        printf("\ttotal_length=%lu\n", match->total_length);
+        printf("\ttotal_length=" SIZE_T_FMT "\n", match->total_length);
         myassert("Invalid match->total_length", match->total_length == test_solution_total_length[i]);
         if (match) {
             free(match);
