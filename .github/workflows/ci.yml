@@ -40,4 +40,4 @@ jobs:
       - name: make
         run: cmake --build .
       - name: test
-        run: ctest -V
+        run: ctest -C Debug -V

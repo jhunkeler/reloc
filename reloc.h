@@ -15,7 +15,7 @@
 #define SIZE_T_FMT "%I64u"
 #elif defined(_MSC_VER)
 #define DIRSEP '\\'
-#define SIZE_T_FMT "%lu"
+#define SIZE_T_FMT "%zu"
 #elif defined(__linux__) || defined(__unix__) || defined(__APPLE__) || defined(__MACH__)
 #define DIRSEP '/'
 #define SIZE_T_FMT "%lu"
