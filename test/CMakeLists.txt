@@ -11,9 +11,9 @@ set(INPUT_FN
 set(OUTPUT_FN
 	test_data.out)
 
+file(REMOVE ${INPLACE_FN})
 configure_file(${INPUT_FN} ${INPUT_FN} COPYONLY)
 configure_file(${INPUT_FN} ${INPLACE_FN} COPYONLY)
-file(REMOVE ${INPLACE_FN})
 file(REMOVE ${OUTPUT_FN})
 
 include_directories("${CMAKE_SOURCE_DIR}")
