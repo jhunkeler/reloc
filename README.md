@@ -36,16 +36,20 @@ $ make install
 
 ## Usage
 ```
-$ reloc <str1> <str2> <input_file> <output_file>
+usage: reloc [-hV] <str1> <str2> <input_file> [output_file]
 
-Arguments:
-str1 - Pattern to search for
-str2 - Replace str1 with contents of str2
-input_file - Path to input file
-output_file - Path to output file
+Options:
+--help    (-h) - Display this help message and exit
+--version (-V) - Display version and exit
+
+Positional arguments:
+str1           - Search string
+str2           - Replacement string
+input_file     - Input file name
+output_file    - Output file name
 
 Example:
-reloc /original/path /new/path input.bin output.bin
+reloc /original/string /new/string input.bin output.bin
 ```
 
 ## Showcase
