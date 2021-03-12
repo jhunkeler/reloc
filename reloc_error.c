@@ -1,7 +1,7 @@
 #include "reloc.h"
 
 int reloc_error = 0;
-const char *_reloc_errors[] = {
+const char *reloc_errors[] = {
     "Success",
     "Read error",
     "Write error",
@@ -13,7 +13,7 @@ const char *_reloc_errors[] = {
 
 
 const char *reloc_strerror(int code) {
-    return _reloc_errors[code];
+    return reloc_errors[code];
 }
 
 void reloc_perror(const char *msg) {
