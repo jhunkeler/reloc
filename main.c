@@ -6,10 +6,10 @@ void show_version() {
 }
 
 void usage(char *program) {
-    printf("usage: %s [-hV] <str1> <str2> <input_file> <output_file>\n"
+    printf("usage: %s [-hV] <str1> <str2> <input_file> [output_file]\n"
            "\n"
            "Options:\n"
-           "--help    (-h) - Display this help message\n"
+           "--help    (-h) - Display this help message and exit\n"
            "--version (-V) - Display version and exit\n"
            "\n"
            "Positional arguments:\n"
@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    if (argc < 5) {
+    if (argc < 4) {
         usage(program);
         exit(1);
     }
@@ -49,10 +49,18 @@ int main(int argc, char *argv[]) {
     char *needle = strdup(argv[1]);
     char *replacement = strdup(argv[2]);
     char *input_file = strdup(argv[3]);
-    char *output_file = strdup(argv[4]);
+    char *output_file = NULL;
+    unsigned char in_place = 0;
     size_t records = 0;
     size_t replacement_length = strlen(replacement);
     RelocData *info = NULL;
+
+    if (argc > 4) {
+        output_file = strdup(argv[4]);
+    } else {
+        output_file = input_file;
+        in_place = 1;
+    }
 
     if (!(info = reloc_read(input_file))) {
         reloc_perror(input_file);
@@ -95,7 +103,9 @@ int main(int argc, char *argv[]) {
     free(needle);
     free(replacement);
     free(input_file);
-    free(output_file);
+    input_file = NULL;
+    if (!in_place)
+        free(output_file);
     reloc_deinit_data(info);
     return 0;
 }
