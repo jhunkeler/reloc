@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.11)
 project(relocate C)
-set(VERSION "1.2.2")
+set(VERSION "1.3.0")
 set(CMAKE_C_STANDARD 99)
 if("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU"
    OR "${CMAKE_C_COMPILER_ID}" STREQUAL "Clang")
